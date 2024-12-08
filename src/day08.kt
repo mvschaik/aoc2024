@@ -41,7 +41,7 @@ fun main(args: Array<String>) {
             maxCol = maxOf(maxCol, col)
             if (value != '.') listOf(value to Pos(row, col)) else emptyList()
         }
-    }.groupBy { it.first }.mapValues { it.value.map { it.second } }
+    }.groupBy({ it.first }, { it.second })
     val bounds = Size(maxRow, maxCol)
 
     val part1 = antennas.values.flatMap { positions ->
