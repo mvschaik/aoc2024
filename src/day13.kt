@@ -35,12 +35,8 @@ fun main(args: Array<String>) {
     println("Part 1: $part1")
 
     val part2 = machines.sumOf { machine ->
-        val (a, b) = Machine(
-            machine.buttonA, machine.buttonB,
-            Coord(
-                machine.prize.x + 10000000000000,
-                machine.prize.y + 10000000000000
-            )
+        val (a, b) = machine.copy(
+            prize = Coord(machine.prize.x + 10000000000000, machine.prize.y + 10000000000000)
         ).solve() ?: Pair(0L, 0L)
         if (a >= 0 && b >= 0) 3 * a + b else 0
     }
