@@ -1,16 +1,21 @@
 import java.io.File
 
-data class Coord(val x: Long, val y: Long)
-data class Machine(val buttonA: Coord, val buttonB: Coord, val prize: Coord)
-
-fun parseBtnLine(s: String): Coord {
-    val (x, y) = """Button .: X\+(\d+), Y\+(\d+)""".toRegex().matchEntire(s)!!.destructured
-    return Coord(x.toLong(), y.toLong())
+data class Vec(val x: Long, val y: Long) {
+    operator fun plus(other: Vec) = Vec(x + other.x, y + other.y)
+    operator fun times(i: Int) = Vec(x * i, y * i)
+    fun mod(other: Vec) = Vec(x.mod(other.x), y.mod(other.y))
 }
 
-fun parsePrize(s: String): Coord {
+data class Machine(val buttonA: Vec, val buttonB: Vec, val prize: Vec)
+
+fun parseBtnLine(s: String): Vec {
+    val (x, y) = """Button .: X\+(\d+), Y\+(\d+)""".toRegex().matchEntire(s)!!.destructured
+    return Vec(x.toLong(), y.toLong())
+}
+
+fun parsePrize(s: String): Vec {
     val (x, y) = """Prize: X=(\d+), Y=(\d+)""".toRegex().matchEntire(s)!!.destructured
-    return Coord(x.toLong(), y.toLong())
+    return Vec(x.toLong(), y.toLong())
 }
 
 fun Machine.solve(): Pair<Long, Long>? {
@@ -36,7 +41,7 @@ fun main(args: Array<String>) {
 
     val part2 = machines.sumOf { machine ->
         val (a, b) = machine.copy(
-            prize = Coord(machine.prize.x + 10000000000000, machine.prize.y + 10000000000000)
+            prize = Vec(machine.prize.x + 10000000000000, machine.prize.y + 10000000000000)
         ).solve() ?: Pair(0L, 0L)
         if (a >= 0 && b >= 0) 3 * a + b else 0
     }
