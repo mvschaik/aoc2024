@@ -11,6 +11,11 @@ class UnionFind<T> {
     size[x] = 1
   }
 
+  fun addAll(xs: Iterable<T>) {
+    conn.putAll(xs.map { it to it })
+    size.putAll(xs.map { it to 1 })
+  }
+
   fun find(x: T): T {
     var toFind = x
     while (conn[toFind] != toFind) {
@@ -68,12 +73,12 @@ fun main(args: Array<String>) {
       println("Part 1: ${path.size - 1}")
       break
     }
-    openNeighbors(part1World, pos).forEach { queue.addLast(it to path + it )}
+    openNeighbors(part1World, pos).forEach { queue.addLast(it to path + it) }
   }
 
   val uf = UnionFind<Vec>()
   val part2World = buildWorld(bytes.toSet(), size).toMutableMap()
-  part2World.keys.forEach(uf::add)
+  uf.addAll(part2World.keys)
   part2World.filter { it.value == State.OPEN }.keys.forEach { p ->
     openNeighbors(part2World, p).forEach { uf.union(p, it) }
   }
